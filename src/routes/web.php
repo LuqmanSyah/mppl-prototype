@@ -1,6 +1,11 @@
 <?php
 
+use App\Filament\Admin\Pages\ReportPreview;
+use App\Models\Employee;
+use App\Models\LeaveRequest;
+use App\Models\PayrollRecord;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
 
 /* NOTE: Do Not Remove
@@ -18,38 +23,30 @@ Livewire::setScriptRoute(function ($handle) {
 / END
 */
 Route::get('/', function () {
-    return view('dashboard', [
-        'role' => request()->query('role', 'admin-hr'),
+    return view('landing', [
+        'employeeCount' => Schema::hasTable('employees') ? Employee::query()->count() : 0,
+        'pendingLeaveCount' => Schema::hasTable('leave_requests') ? LeaveRequest::query()->where('status', 'Menunggu')->count() : 0,
+        'payrollCount' => Schema::hasTable('payroll_records') ? PayrollRecord::query()->count() : 0,
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard', [
-        'role' => request()->query('role', 'admin-hr'),
-    ]);
-})->name('dashboard');
-
-Route::view('/login-demo', 'auth.login')->name('login.demo');
-
-Route::view('/karyawan', 'admin.karyawan.index')->name('karyawan.index');
-Route::view('/karyawan/form', 'admin.karyawan.form')->name('karyawan.form');
-Route::view('/karyawan/create', 'admin.karyawan.form')->name('karyawan.create');
-Route::view('/karyawan/delete', 'admin.karyawan.delete')->name('karyawan.delete');
-
-Route::view('/cuti', 'admin.cuti.history')->name('cuti.history');
-Route::view('/cuti/pengajuan', 'admin.cuti.form')->name('cuti.form');
-Route::view('/cuti/approval', 'admin.cuti.approval')->name('cuti.approval');
-
-Route::view('/penggajian', 'admin.penggajian.index')->name('penggajian.index');
-Route::view('/penggajian/slip', 'admin.penggajian.slip')->name('penggajian.slip');
-
-Route::view('/laporan', 'admin.laporan.index')->name('laporan.index');
+Route::redirect('/dashboard', '/')->name('dashboard');
+Route::redirect('/karyawan', '/admin/karyawan')->name('karyawan.index');
+Route::redirect('/karyawan/form', '/admin/karyawan/create')->name('karyawan.form');
+Route::redirect('/karyawan/create', '/admin/karyawan/create')->name('karyawan.create');
+Route::redirect('/karyawan/delete', '/admin/karyawan')->name('karyawan.delete');
+Route::redirect('/cuti', '/admin/cuti')->name('cuti.history');
+Route::redirect('/cuti/pengajuan', '/admin/cuti/create')->name('cuti.form');
+Route::redirect('/cuti/approval', '/admin/cuti')->name('cuti.approval');
+Route::redirect('/penggajian', '/admin/penggajian')->name('penggajian.index');
+Route::redirect('/penggajian/slip', '/admin/penggajian')->name('penggajian.slip');
+Route::redirect('/laporan', '/admin/laporan')->name('laporan.index');
 Route::get('/laporan/preview/{document}/{format}', function (string $document, string $format) {
     abort_unless(in_array($document, ['karyawan', 'cuti', 'gaji'], true), 404);
     abort_unless(in_array($format, ['pdf', 'excel'], true), 404);
 
-    return view('admin.laporan.preview', [
+    return redirect(ReportPreview::getUrl([
         'document' => $document,
         'format' => $format,
-    ]);
+    ]));
 })->name('laporan.preview');

@@ -53,6 +53,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make()
+                    ->label('Manajemen HR'),
+                NavigationGroup::make()
+                    ->label('Penggajian'),
+                NavigationGroup::make()
+                    ->label('Laporan'),
+                NavigationGroup::make()
                     ->label('Administration'),
             ])
             ->userMenuItems([
@@ -95,6 +101,9 @@ class AdminPanelProvider extends PanelProvider
                     ]),
                 \Awcodes\Overlook\OverlookPlugin::make()
                     ->includes([
+                        \App\Filament\Admin\Resources\EmployeeResource::class,
+                        \App\Filament\Admin\Resources\LeaveRequestResource::class,
+                        \App\Filament\Admin\Resources\PayrollRecordResource::class,
                         \App\Filament\Admin\Resources\UserResource::class,
                     ]),
                 \Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin::make()
