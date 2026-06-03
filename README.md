@@ -205,7 +205,19 @@ git clone <URL_REPOSITORY>
 cd mppl
 ```
 
-2. Jalankan container.
+2. Daftarkan domain lokal.
+
+```bash
+./scripts/setup-hosts.sh
+```
+
+Script ini menambahkan entry berikut ke `/etc/hosts` jika belum ada, dan akan meminta password `sudo`:
+
+```text
+127.0.0.1 mppl.test
+```
+
+3. Jalankan container.
 
 ```bash
 docker compose up -d --build
@@ -223,20 +235,14 @@ Perintah ini sudah menyiapkan aplikasi secara otomatis:
 - Membuat storage link.
 - Membersihkan cache Laravel.
 
-3. Buka aplikasi.
+4. Buka aplikasi.
 
 ```text
 https://mppl.test
 https://mppl.test/admin
 ```
 
-Jika domain `mppl.test` belum aktif di mesin lokal, tambahkan entry hosts dan pastikan konfigurasi SSL/Nginx sudah sesuai.
-
-Contoh entry hosts:
-
-```text
-127.0.0.1 mppl.test
-```
+Jika browser menampilkan peringatan SSL, lanjutkan melalui opsi advanced karena sertifikat lokal di `nginx/ssl` bersifat self-signed.
 
 ## Konfigurasi Environment
 
